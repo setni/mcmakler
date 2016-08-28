@@ -1,0 +1,22 @@
+#INDEX
+neo_nasa_home:
+    path:      /
+    defaults:
+        _controller: NeoNasaBundle:Default:index
+
+#ADD
+neo_nasa_add:
+    path:      /add
+    defaults:
+        _controller: NeoNasaBundle:Default:add
+
+#RESULT
+neo_nasa_hasardous:
+    path:      /neo/hazardous
+    defaults:
+        _controller: NeoNasaBundle:Default:hazardous
+        
+neo_nasa_fastest:
+    path:      /neo/fastest
+    defaults:
+        _controller: NeoNasaBundle:Default:fastest

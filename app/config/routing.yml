@@ -1,0 +1,3 @@
+neo_nasa:
+    resource: "@NeoNasaBundle/Resources/config/routing.yml"
+    prefix:   /
