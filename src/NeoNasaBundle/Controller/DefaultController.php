@@ -27,6 +27,7 @@ class DefaultController extends Controller
     {
         $data = file_get_contents('https://api.nasa.gov/neo/rest/v1/feed?start_date=2016-08-25&end_date=2016-08-28&detailed=true&api_key=N7LkblDsc5aen05FJqBQ8wU4qSdmsftwJagVK7UD', 'r');
         $tab = json_decode($data, true);
+        $dm = $this->get('doctrine_mongodb')->getManager();
         foreach($tab['near_earth_objects'] as $date => $value) {
             foreach($value as $near_earth_object) {
                 $neo_reference_id                   = $near_earth_object["neo_reference_id"];
@@ -34,21 +35,22 @@ class DefaultController extends Controller
                 $is_potentially_hazardous_asteroid  = $near_earth_object["is_potentially_hazardous_asteroid"];
                 $kilometres_per_hours               = $near_earth_object["close_approach_data"][0]["relative_velocity"]["kilometers_per_hour"];
                 $repo = new Neorepo();
-                $repo->setDate($date);
-                $repo->setReference($neo_reference_id);
-                $repo->setNom($nom);
-                $repo->setHazardous($is_potentially_hazardous_asteroid);
-                $repo->setSpeed($kilometres_per_hours);
-                $dm = $this->get('doctrine_mongodb')->getManager();
-                try {
-                    $dm->persist($repo);
-                    $dm->flush();
-                } catch (Exception $e) {
-                    return new Response('Error occured');
-                } 
+                $repo->setDate($date)
+                    ->setReference($neo_reference_id)
+                    ->setNom($nom)
+                    ->setHazardous($is_potentially_hazardous_asteroid)
+                    ->setSpeed($kilometres_per_hours);
+                $dm->persist($repo);
             }
+            
         }
-        return new Response('Insert OK'); 
+        try 
+        {
+            $dm->flush();
+            return new Response('Insert OK'); 
+        } catch (Exception $e) {
+            return new Response('Error occured');
+        } 
     }
     public function hazardousAction () 
         {
