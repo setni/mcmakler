@@ -2,6 +2,7 @@
     "name": "dupont/mcmakler",
     "license": "proprietary",
     "type": "project",
+    "description": "test for McMakler",
     "autoload": {
         "psr-4": {
             "": "src/"
